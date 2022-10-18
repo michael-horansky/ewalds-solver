@@ -100,6 +100,7 @@ for k_out in k_out_list:
 points = np.array(points)
 print(points)
 # plt.plot(points[:,0],points[:,1],'ro')
+# fig, ax = plt.subplots()
 ax = plt.axes(projection='3d')
 
 u = np.linspace(0, np.pi, 30)
@@ -112,8 +113,9 @@ z = k_in_mag*np.outer(np.cos(u), np.ones_like(v)) + k_in[2]
 
 ax.plot_surface(x, y, z,alpha=0.2)
 
+color_input = 'red'
+points_scatter_plot = ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c=color_input)
 
-ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c='red')
 
 ax.quiver(k_in[0],k_in[1],k_in[2],-k_in[0],-k_in[1],-k_in[2],color='black')
 left_bound = -2
@@ -123,8 +125,64 @@ ax.axes.set_xlim3d(left=left_bound*k_in_mag + k_in[0], right=right_bound*k_in_ma
 ax.axes.set_ylim3d(bottom=left_bound*k_in_mag + k_in[1], top=right_bound*k_in_mag + k_in[1]) 
 ax.axes.set_zlim3d(bottom=left_bound*k_in_mag + k_in[2], top=right_bound*k_in_mag + k_in[2]) 
 
+from matplotlib.widgets import Button
+
+
+
+def remove(val):
+  alpha = 0
+  color_input = "white"
+  points_scatter_plot.set_visible(False)
+  #ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c=color_input,alpha = alpha)
+
+def show(val):
+
+    alpha = 1
+    color_input = 'red'
+    points_scatter_plot.set_visible(True)
+
+ 
+# count = 0
+# def vis(val):
+#     if count //2 == 0:
+#         points_scatter_plot.set_visible(False)
+#         count += 1
+#     elif count//2 != 0:
+#         points_scatter_plot.set_visible(True)
+#         count += 1
+
+
+ 
+# # defining button and add its functionality
+# axes1 = plt.axes([0.7, 0.05, 0.1, 0.075])
+# axes2 = plt.axes([0.7, 0.2, 0.1, 0.075])
+
+# # bnext = Button(axes1, 'Remove',color="white")
+# # bnext.on_clicked(remove)
+
+# # anxet = Button(axes2, 'Show', color="white")
+# # anxet.on_clicked(show)
+
+# visnet = Button(axes1,"Toggle",color='white')
+# visnet.on_clicked(vis)
+
+class Index:
+    ind = 0
+
+    def next(self, event):
+        self.ind += 1
+        if self.ind % 2 == 0:
+             points_scatter_plot.set_visible(True)
+        else:
+            points_scatter_plot.set_visible(False)
+
+callback = Index()
+axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
+bnext = Button(axnext, 'Next')
+bnext.on_clicked(callback.next)
 
 plt.show()
+
 
 
 
