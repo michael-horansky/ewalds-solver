@@ -101,22 +101,29 @@ print(points)
 # plt.plot(points[:,0],points[:,1],'ro')
 ax = plt.axes(projection='3d')
 
-
-
-
-
+# from mpl_toolkits.mplot3d import Axes3D
 u = np.linspace(0, np.pi, 30)
 v = np.linspace(0, 2 * np.pi, 30)
+k_in_mag = magnitude(k_in)
 
-x = 1*np.outer(np.sin(u), np.sin(v)) + k_in[0]
-y = 1*np.outer(np.sin(u), np.cos(v)) + k_in[1]
-z = 1*np.outer(np.cos(u), np.ones_like(v)) + k_in[2]
+x = k_in_mag*np.outer(np.sin(u), np.sin(v)) + k_in[0]
+y = k_in_mag*np.outer(np.sin(u), np.cos(v)) + k_in[1]
+z = k_in_mag*np.outer(np.cos(u), np.ones_like(v)) + k_in[2]
+
+# ax.quiver(0,0,0,k_in[0],k_in[1],k_in[2])
+ax.plot_surface(x, y, z,alpha=0.7)
 
 
-ax.plot_wireframe(x, y, z)
+ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c='red')
+# ax.quiver(k_in[0],k_in[1],k_in[2],0,0,0,color='black')
+left_bound = -2
+right_bound = 4
+
+ax.axes.set_xlim3d(left=left_bound*k_in[0], right=right_bound*k_in[0])
+ax.axes.set_ylim3d(bottom=left_bound*k_in[1], top=right_bound*k_in[1]) 
+ax.axes.set_zlim3d(bottom=left_bound*k_in[2], top=right_bound*k_in[2]) 
 
 
-ax.scatter(points[:,0],points[:,1],points[:,2], s=3, c='red')
 plt.show()
 
 
