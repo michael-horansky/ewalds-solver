@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import itertools
 
 from ewald_defs import *
@@ -101,7 +102,6 @@ print(points)
 # plt.plot(points[:,0],points[:,1],'ro')
 ax = plt.axes(projection='3d')
 
-# from mpl_toolkits.mplot3d import Axes3D
 u = np.linspace(0, np.pi, 30)
 v = np.linspace(0, 2 * np.pi, 30)
 k_in_mag = magnitude(k_in)
@@ -110,12 +110,12 @@ x = k_in_mag*np.outer(np.sin(u), np.sin(v)) + k_in[0]
 y = k_in_mag*np.outer(np.sin(u), np.cos(v)) + k_in[1]
 z = k_in_mag*np.outer(np.cos(u), np.ones_like(v)) + k_in[2]
 
-# ax.quiver(0,0,0,k_in[0],k_in[1],k_in[2])
-ax.plot_surface(x, y, z,alpha=0.7)
+ax.plot_surface(x, y, z,alpha=0.2)
 
 
 ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c='red')
-# ax.quiver(k_in[0],k_in[1],k_in[2],0,0,0,color='black')
+
+ax.quiver(k_in[0],k_in[1],k_in[2],-k_in[0],-k_in[1],-k_in[2],color='black')
 left_bound = -2
 right_bound = 2
 
