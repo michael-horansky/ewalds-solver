@@ -130,7 +130,7 @@ z = k_in_mag*np.outer(np.cos(u), np.ones_like(v)) - k_in[2]
 
 # Plot the Ewald's sphere
 
-ax.plot_surface(x, y, z,alpha=0.2)
+ewald_sphere_plot = ax.plot_surface(x, y, z,alpha=0.2)
 
 # Plot the reciprocal lattice
 color_input = 'red'
@@ -139,11 +139,11 @@ points_scatter_plot = ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c=col
 
 # Plot the k_in wavevector
 
-ax.quiver(-k_in[0],-k_in[1],-k_in[2],k_in[0],k_in[1],k_in[2],color='black')
+k_in_vecotr_plots = ax.quiver(-k_in[0],-k_in[1],-k_in[2],k_in[0],k_in[1],k_in[2],color='black')
 
 # Plot the legit k_out wavevectors
 
-ax.quiver(-k_in[0],-k_in[1],-k_in[2],k_out_matrix[0],k_out_matrix[1],k_out_matrix[2],color='red', linestyles='dashed')
+k_out_vecotr_plots = ax.quiver(-k_in[0],-k_in[1],-k_in[2],k_out_matrix[0],k_out_matrix[1],k_out_matrix[2],color='red', linestyles='dashed')
 
 
 left_bound = -2
@@ -155,20 +155,40 @@ ax.axes.set_zlim3d(bottom=left_bound*k_in_mag - k_in[2], top=right_bound*k_in_ma
 
 
 
-class Index:
+class ToggleObject:
     ind = 0
+    def __init__(self, plot_object):
+        self.plot_object = plot_object
 
-    def next(self, event):
+    def toggle_object(self, event):
         self.ind += 1
         if self.ind % 2 == 0:
-             points_scatter_plot.set_visible(True)
+             self.plot_object.set_visible(True)
         else:
-            points_scatter_plot.set_visible(False)
+            self.plot_object.set_visible(False)
 
-callback = Index()
-axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
-bnext = Button(axnext, 'Toggle')
-bnext.on_clicked(callback.next)
+
+callback_scatter = ToggleObject(plot_object=points_scatter_plot)
+ax_scatter = plt.axes([0.81, 0.05, 0.1, 0.075])
+b_scatter = Button(ax_scatter, 'Points')
+b_scatter.on_clicked(callback_scatter.toggle_object)
+
+callback__out_vector = ToggleObject(plot_object=k_out_vecotr_plots)
+ax_out_vector = plt.axes([0.70, 0.05, 0.1, 0.075])
+b_out_vector = Button(ax_out_vector, 'k out')
+b_out_vector.on_clicked(callback__out_vector.toggle_object)
+
+callback_in_vector = ToggleObject(plot_object=k_in_vecotr_plots)
+ax_in_vector = plt.axes([0.59, 0.05, 0.1, 0.075])
+b_in_vector = Button(ax_in_vector, 'k in')
+b_in_vector.on_clicked(callback_in_vector.toggle_object)
+
+callback_ewald_sphere = ToggleObject(plot_object=ewald_sphere_plot)
+ax_ewald_sphere = plt.axes([0.48, 0.05, 0.1, 0.075])
+b_ewald_sphere = Button(ax_ewald_sphere, 'k sphere')
+b_ewald_sphere.on_clicked(callback_ewald_sphere.toggle_object)
+
+
 
 
 plt.show()
