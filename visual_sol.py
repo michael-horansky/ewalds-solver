@@ -3,9 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import itertools
-
-from ewald_methods import *
+from matplotlib.widgets import Button
+from ewald_defs import *
 
 
 # r = 3
@@ -73,22 +72,8 @@ zero_threshold = 1e-06
 
 
 points = []
-k_out_matrix = [[], [], []] # k[0] is the set of x-components of valid k_out wavevectors etc
-
-# Optimize the search subspace: this will be a box escribed to the sphere
-k_in_mag = magnitude(k_in)
-diameter = int(np.ceil(2.0 * k_in_mag))
-x_min = -k_in[0] - k_in_mag
-x_max = -k_in[0] + k_in_mag
-y_min = -k_in[1] - k_in_mag
-y_max = -k_in[1] + k_in_mag
-z_min = -k_in[2] - k_in_mag
-z_max = -k_in[2] + k_in_mag
-
-
-k_out_list, points, k_out_matrix = reciprocal_lattice_search_naive(b, k_in, diameter, zero_threshold)
-
-"""for h_i in range(- diameter, diameter + 1):
+diameter = int(np.ceil(2.0 * magnitude(k_in)))
+for h_i in range(- diameter, diameter + 1):
     for h_j in range(- diameter, diameter + 1):
         for h_k in range( - diameter, diameter + 1):
             
@@ -107,9 +92,6 @@ k_out_list, points, k_out_matrix = reciprocal_lattice_search_naive(b, k_in, diam
             if (np.absolute(2.0 * inner_product(k_in, G) + inner_product(G, G)) < zero_threshold):
                 cur_k_out = k_in + G
                 k_out_list.append(cur_k_out)
-                k_out_matrix[0].append(cur_k_out[0])
-                k_out_matrix[1].append(cur_k_out[1])
-                k_out_matrix[2].append(cur_k_out[2])"""
 
 print("The possible scattered wave-vectors:")
 for k_out in k_out_list:
@@ -117,42 +99,47 @@ for k_out in k_out_list:
 points = np.array(points)
 print(points)
 # plt.plot(points[:,0],points[:,1],'ro')
+# fig, ax = plt.subplots()
 ax = plt.axes(projection='3d')
 
 u = np.linspace(0, np.pi, 30)
 v = np.linspace(0, 2 * np.pi, 30)
+k_in_mag = magnitude(k_in)
 
-x = k_in_mag*np.outer(np.sin(u), np.sin(v)) - k_in[0]
-y = k_in_mag*np.outer(np.sin(u), np.cos(v)) - k_in[1]
-z = k_in_mag*np.outer(np.cos(u), np.ones_like(v)) - k_in[2]
-
-# Plot the Ewald's sphere
+x = k_in_mag*np.outer(np.sin(u), np.sin(v)) + k_in[0]
+y = k_in_mag*np.outer(np.sin(u), np.cos(v)) + k_in[1]
+z = k_in_mag*np.outer(np.cos(u), np.ones_like(v)) + k_in[2]
 
 ax.plot_surface(x, y, z,alpha=0.2)
 
-# Plot the reciprocal lattice
-
-ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c='red')
-
-# Plot the k_in wavevector
-
-ax.quiver(-k_in[0],-k_in[1],-k_in[2],k_in[0],k_in[1],k_in[2],color='black')
-
-# Plot the legit k_out wavevectors
-
-ax.quiver(-k_in[0],-k_in[1],-k_in[2],k_out_matrix[0],k_out_matrix[1],k_out_matrix[2],color='red', linestyles='dashed')
+color_input = 'red'
+points_scatter_plot = ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c=color_input)
 
 
+ax.quiver(k_in[0],k_in[1],k_in[2],-k_in[0],-k_in[1],-k_in[2],color='black')
 left_bound = -2
 right_bound = 2
 
-ax.axes.set_xlim3d(left=left_bound*k_in_mag - k_in[0], right=right_bound*k_in_mag - k_in[0])
-ax.axes.set_ylim3d(bottom=left_bound*k_in_mag - k_in[1], top=right_bound*k_in_mag - k_in[1]) 
-ax.axes.set_zlim3d(bottom=left_bound*k_in_mag - k_in[2], top=right_bound*k_in_mag - k_in[2]) 
+ax.axes.set_xlim3d(left=left_bound*k_in_mag + k_in[0], right=right_bound*k_in_mag + k_in[0])
+ax.axes.set_ylim3d(bottom=left_bound*k_in_mag + k_in[1], top=right_bound*k_in_mag + k_in[1]) 
+ax.axes.set_zlim3d(bottom=left_bound*k_in_mag + k_in[2], top=right_bound*k_in_mag + k_in[2]) 
+
+
+
+class Index:
+    ind = 0
+
+    def next(self, event):
+        self.ind += 1
+        if self.ind % 2 == 0:
+             points_scatter_plot.set_visible(True)
+        else:
+            points_scatter_plot.set_visible(False)
+
+callback = Index()
+axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
+bnext = Button(axnext, 'Toggle')
+bnext.on_clicked(callback.next)
 
 
 plt.show()
-
-
-
-
