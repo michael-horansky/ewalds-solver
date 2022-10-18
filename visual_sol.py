@@ -142,25 +142,5 @@ bnext = Button(axnext, 'Toggle')
 bnext.on_clicked(callback.next)
 
 
-
 plt.show()
-
-# axsize =  plt.axes([0.81, 0.05, 0.1, 0.075])
-# size_slider = Slider(
-#     ax = size
-#     label = "Size"
-#     valmin=0.1
-#     valmax=3
-#     valinit=1
-# )
-
-# axfreq = fig.add_axes([0.25, 0.1, 0.65, 0.03])
-# freq_slider = Slider(
-#     ax=axfreq,
-#     label='Frequency [Hz]',
-#     valmin=0.1,
-#     valmax=30,
-#     valinit=init_frequency,
-# )
-
 
