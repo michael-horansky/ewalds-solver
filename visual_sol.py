@@ -79,14 +79,14 @@ for h_i in range(- diameter, diameter + 1):
             
             # G = h_i b_1 + h_j b_2 + h_k b_3, check the Laue condition for viable values of G
             G = (scalar_product(b[0], h_i) + scalar_product(b[1], h_j) + scalar_product(b[2], h_k))
-            if h_k == 0:
-                G_x = G[0]
-                G_y = G[1]
-                G_z = G[2]
+           
+            G_x = G[0]
+            G_y = G[1]
+            G_z = G[2]
                 # print("G_x",G_x)
                 # print("G_y",G_y)
                 # plt.plot(G_x,G_y,color='red')
-                points.append([G_x,G_y,G_z])
+            points.append([G_x,G_y,G_z])
             if h_i == 0 and h_j == 0 and h_k == 0:
                 continue
             if (np.absolute(2.0 * inner_product(k_in, G) + inner_product(G, G)) < zero_threshold):
@@ -97,7 +97,28 @@ print("The possible scattered wave-vectors:")
 for k_out in k_out_list:
     print(f"  k_out = 2 pi ({k_out[0]}, {k_out[1]}, {k_out[2]})")
 points = np.array(points)
+print(points)
 # plt.plot(points[:,0],points[:,1],'ro')
 ax = plt.axes(projection='3d')
-ax.plot3D(points[:,0],points[:,1],points[:,2],'ro')
+
+
+
+
+
+u = np.linspace(0, np.pi, 30)
+v = np.linspace(0, 2 * np.pi, 30)
+
+x = 1*np.outer(np.sin(u), np.sin(v)) + k_in[0]
+y = 1*np.outer(np.sin(u), np.cos(v)) + k_in[1]
+z = 1*np.outer(np.cos(u), np.ones_like(v)) + k_in[2]
+
+
+ax.plot_wireframe(x, y, z)
+
+
+ax.scatter(points[:,0],points[:,1],points[:,2], s=3, c='red')
 plt.show()
+
+
+
+
