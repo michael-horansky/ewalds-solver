@@ -116,9 +116,7 @@ print("The possible scattered wave-vectors:")
 for k_out in k_out_list:
     print(f"  k_out = 2 pi ({k_out[0]}, {k_out[1]}, {k_out[2]})")
 points = np.array(points)
-print(points)
-# plt.plot(points[:,0],points[:,1],'ro')
-# fig, ax = plt.subplots()
+
 ax = plt.axes(projection='3d')
 
 u = np.linspace(0, np.pi, 30)
@@ -127,7 +125,7 @@ v = np.linspace(0, 2 * np.pi, 30)
 x = k_in_mag*np.outer(np.sin(u), np.sin(v)) - k_in[0]
 y = k_in_mag*np.outer(np.sin(u), np.cos(v)) - k_in[1]
 z = k_in_mag*np.outer(np.cos(u), np.ones_like(v)) - k_in[2]
-
+ax.set_box_aspect((np.ptp(x), np.ptp(y), np.ptp(z)))
 # Plot the Ewald's sphere
 
 ewald_sphere_plot = ax.plot_surface(x, y, z,alpha=0.2)
@@ -185,10 +183,8 @@ b_in_vector.on_clicked(callback_in_vector.toggle_object)
 
 callback_ewald_sphere = ToggleObject(plot_object=ewald_sphere_plot)
 ax_ewald_sphere = plt.axes([0.48, 0.05, 0.1, 0.075])
-b_ewald_sphere = Button(ax_ewald_sphere, 'k sphere')
+b_ewald_sphere = Button(ax_ewald_sphere, 'sphere')
 b_ewald_sphere.on_clicked(callback_ewald_sphere.toggle_object)
-
-
 
 
 plt.show()
