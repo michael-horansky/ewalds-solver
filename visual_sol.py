@@ -117,11 +117,11 @@ ax.plot_surface(x, y, z,alpha=0.7)
 ax.scatter(points[:,0],points[:,1],points[:,2], s=5, c='red')
 # ax.quiver(k_in[0],k_in[1],k_in[2],0,0,0,color='black')
 left_bound = -2
-right_bound = 4
+right_bound = 2
 
-ax.axes.set_xlim3d(left=left_bound*k_in[0], right=right_bound*k_in[0])
-ax.axes.set_ylim3d(bottom=left_bound*k_in[1], top=right_bound*k_in[1]) 
-ax.axes.set_zlim3d(bottom=left_bound*k_in[2], top=right_bound*k_in[2]) 
+ax.axes.set_xlim3d(left=left_bound*k_in_mag + k_in[0], right=right_bound*k_in_mag + k_in[0])
+ax.axes.set_ylim3d(bottom=left_bound*k_in_mag + k_in[1], top=right_bound*k_in_mag + k_in[1]) 
+ax.axes.set_zlim3d(bottom=left_bound*k_in_mag + k_in[2], top=right_bound*k_in_mag + k_in[2]) 
 
 
 plt.show()
