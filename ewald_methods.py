@@ -81,7 +81,7 @@ def reciprocal_lattice_search_BFS(b, k_in, diameter, zero_threshold = 1e-08, dis
         
         cur_G = (scalar_product(b[0], cur_node[0]) + scalar_product(b[1], cur_node[1]) + scalar_product(b[2], cur_node[2]))
         points.append([cur_G[0], cur_G[1], cur_G[2]])
-        if cur_node[0] != 0 or cur_node[1] != 1 or cur_node != 2:
+        if cur_node[0] != 0 or cur_node[1] != 0 or cur_node[2] != 0:
             if (np.absolute(2.0 * inner_product(k_in, cur_G) + inner_product(cur_G, cur_G)) < zero_threshold):
                 cur_k_out = k_in + cur_G
                 k_out_list.append(cur_k_out)
